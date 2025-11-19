@@ -1,5 +1,6 @@
 package com.example.demo.controller;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import com.example.demo.dto.QRCodeDTO;
 import com.example.demo.entity.QRCodeEntity;
 import com.example.demo.service.AES256Service;
@@ -24,6 +25,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/qr")
 @CrossOrigin(origins = "*")
+@Controller
 public class QRCodeController {
 
     private final QRCodeService qrCodeService;
@@ -50,6 +52,50 @@ public class QRCodeController {
         this.qrCodeReaderService = qrCodeReaderService;
         this.fileStorageService = fileStorageService;
     }
+    @GetMapping("/profile")
+public String showProfile(@RequestParam(required = false) String id, 
+                         @RequestParam(required = false) String encryptedText, 
+                         Model model) {
+    try {
+        QRCodeEntity qrCode = null;
+        
+        // Buscar por ID o encryptedText
+        if (id != null && !id.trim().isEmpty()) {
+            qrCode = qrCodeService.getQRCodeById(id);
+        } else if (encryptedText != null && !encryptedText.trim().isEmpty()) {
+            qrCode = qrCodeService.getQRCodeWithPersonalData(encryptedText);
+        }
+        
+        if (qrCode != null && qrCode.getNombre() != null) {
+            model.addAttribute("found", true);
+            model.addAttribute("nombre", qrCode.getNombre() != null ? qrCode.getNombre() : "");
+            model.addAttribute("apellidos", qrCode.getApellidos() != null ? qrCode.getApellidos() : "");
+            model.addAttribute("ci", qrCode.getCi() != null ? qrCode.getCi() : "");
+            model.addAttribute("departamento", qrCode.getDepartamento() != null ? qrCode.getDepartamento() : "");
+            model.addAttribute("areaVoluntariado", qrCode.getAreaVoluntariado() != null ? qrCode.getAreaVoluntariado() : "");
+            model.addAttribute("fechaNacimiento", qrCode.getFechaNacimiento() != null ? qrCode.getFechaNacimiento().toString() : "");
+            model.addAttribute("fotoUrl", qrCode.getFotoUrl() != null ? qrCode.getFotoUrl() : "");
+            model.addAttribute("message", "QR válido — datos verificados contra la base de datos.");
+        } else if (qrCode != null) {
+            model.addAttribute("found", true);
+            model.addAttribute("message", "QR válido — Sin datos personales registrados.");
+        } else {
+            model.addAttribute("found", false);
+            model.addAttribute("message", "QR no válido o no registrado.");
+        }
+        
+        String textToShow = encryptedText != null ? encryptedText : (qrCode != null ? qrCode.getEncryptedText() : "N/A");
+        model.addAttribute("encryptedText", textToShow);
+        
+        return "qr/profile";
+        
+    } catch (Exception e) {
+        model.addAttribute("found", false);
+        model.addAttribute("message", "Error al verificar el QR: " + e.getMessage());
+        model.addAttribute("encryptedText", encryptedText != null ? encryptedText : "N/A");
+        return "qr/profile";
+    }
+}
 
     /** Construye la URL pública que debe codificarse en el QR.
      *  SIEMPRE usa el TEXTO CIFRADO (encrypted), NO el IV.

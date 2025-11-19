@@ -472,7 +472,7 @@
   <div class="card">
     <div class="card-inner">
 
-      <!-- HEADER -->
+      <!-- HEADER CORREGIDO -->
       <div class="header">
         <div class="brand">
           <div class="brand-pill-img">
@@ -485,18 +485,18 @@
           </div>
         </div>
 
-        <div class="badge" th:if="${found}">
+        <div class="badge" th:if="${found != null and found}">
           <span class="icon">✅</span>
           <span>QR verificado</span>
         </div>
-        <div class="badge" th:if="${!found}">
+        <div class="badge" th:if="${found != null and !found}">
           <span class="icon">⚠️</span>
           <span>QR inválido</span>
         </div>
       </div>
 
-      <!-- CONTENIDO CUANDO SE ENCUENTRA REGISTRO -->
-      <div th:if="${found}" class="body">
+      <!-- CONTENIDO CUANDO SE ENCUENTRA REGISTRO - CORREGIDO -->
+      <div th:if="${found != null and found}" class="body">
         <!-- FOTO -->
         <div class="photo-wrap">
           <div th:if="${fotoUrl != null and fotoUrl != ''}">
@@ -532,14 +532,14 @@
             <div class="field">
               <div class="field-label">Departamento</div>
               <div class="field-value"
-                   th:text="${departamento != null && departamento != '' ? departamento : '—'}"></div>
+                   th:text="${departamento != null and departamento != '' ? departamento : '—'}"></div>
             </div>
 
             <!-- Área de voluntariado -->
             <div class="field">
               <div class="field-label">Área de voluntariado</div>
               <div class="field-value"
-                   th:text="${areaVoluntariado != null && areaVoluntariado != '' ? areaVoluntariado : '—'}"></div>
+                   th:text="${areaVoluntariado != null and areaVoluntariado != '' ? areaVoluntariado : '—'}"></div>
             </div>
 
             <div class="field">
@@ -563,8 +563,8 @@
         </div>
       </div>
 
-      <!-- CONTENIDO CUANDO NO SE ENCUENTRA REGISTRO -->
-      <div th:if="${!found}">
+      <!-- CONTENIDO CUANDO NO SE ENCUENTRA REGISTRO - CORREGIDO -->
+      <div th:if="${found != null and !found}">
         <div class="status status-err">
           <div class="status-icon">⛔</div>
           <div class="status-text" th:text="${message}">
