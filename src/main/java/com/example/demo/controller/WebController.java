@@ -10,7 +10,7 @@ public class WebController {
 
     // Si usas application.properties: admin.password=admin1
     // También podrías inyectarlo con @Value, pero para dejarlo simple y estable:
-    private static final String ADMIN_PASSWORD = "admin1";
+    private static final String ADMIN_PASSWORD = "admin123";
 
     @GetMapping("/")
     public String home() {
