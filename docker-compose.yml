@@ -1,0 +1,14 @@
+﻿# docker-compose.yml
+version: '3.8'
+
+services:
+  qrgetsemani:
+    build: .
+    ports:
+      - "8080:10000"
+    environment:
+      - PORT=10000
+      - ADMIN_PASSWORD=admin123
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped

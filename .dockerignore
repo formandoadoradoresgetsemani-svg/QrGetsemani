@@ -1,0 +1,13 @@
+﻿# .dockerignore
+target/
+*.jar
+*.war
+*.ear
+.git
+.gitignore
+README.md
+.DS_Store
+.idea
+*.iml
+.vscode
+node_modules
